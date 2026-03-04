@@ -1,8 +1,16 @@
 #!/usr/bin/env bash
+set -e
+
 if [ "$(stat -fc %T /sys/fs/cgroup)" != "cgroup2fs" ]; then
     echo "Needs cgroup!"
     exit 1 
 fi
+
+echo "Waiting for apt lock..."
+while sudo fuser /var/lib/apt/lists/lock /var/lib/dpkg/lock /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do
+    echo "apt is locked, retrying in 5s..."
+    sleep 5
+done
 
 curl -fsSL https://get.docker.com | sudo sh
 wget https://raw.githubusercontent.com/justinl681/domjudge-autoinstall/refs/heads/main/docker-compose.yml
