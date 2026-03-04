@@ -17,7 +17,7 @@ done
 
 echo "This is your admin password:"
 sudo docker exec domserver cat /opt/domjudge/domserver/etc/initial_admin_password.secret
-JUDGEHOST_PASSWORD=$(sudo docker exec domserver cat /opt/domjudge/domserver/etc/restapi.secret)
+JUDGEHOST_PASSWORD=$(sudo docker exec domserver cat /opt/domjudge/domserver/etc/restapi.secret | grep -v '^#' | awk '{print $4}')
 
 echo "JUDGEHOST_PASSWORD=$JUDGEHOST_PASSWORD" > .env
 sudo docker compose up -d judgehost-0 judgehost-1
