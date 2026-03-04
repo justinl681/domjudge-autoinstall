@@ -12,7 +12,12 @@ while sudo fuser /var/lib/apt/lists/lock /var/lib/dpkg/lock /var/lib/dpkg/lock-f
     sleep 5
 done
 
-curl -fsSL https://get.docker.com | sudo sh
+if command -v "docker" &>/dev/null; then
+    echo "Docker exists. Skipping installation..."
+else
+    curl -fsSL https://get.docker.com | sudo sh
+fi
+    
 wget https://raw.githubusercontent.com/justinl681/domjudge-autoinstall/refs/heads/main/docker-compose.yml
 sudo docker compose up -d mariadb domserver
 
